@@ -75,7 +75,7 @@ npm run dev
 
 ---
 
-## 🏆 Hackathon Criteria Fulfilled
+## 🏆 Criteria Fulfilled
 
 ✔ Story-based structure (5+ sections)
 ✔ Scroll-based interactions (parallax + animations)
