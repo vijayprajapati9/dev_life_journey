@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 4%;
+    --foreground: 0 0% 92%;
+
+    --card: 220 18% 8%;
+    --card-foreground: 0 0% 92%;
+
+    --popover: 220 18% 8%;
+    --popover-foreground: 0 0% 92%;
+
+    --primary: 120 100% 50%;
+    --primary-foreground: 220 20% 4%;
+
+    --secondary: 280 80% 60%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 50%;
+
+    --accent: 40 95% 55%;
+    --accent-foreground: 220 20% 4%;
+
+    --destructive: 0 80% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 15%;
+    --input: 220 15% 15%;
+    --ring: 120 100% 50%;
+
+    --radius: 0.75rem;
+
+    /* Custom tokens */
+    --neon-glow: 120 100% 50%;
+    --terminal-bg: 220 20% 6%;
+    --code-line: 220 15% 14%;
+    --coffee: 25 70% 35%;
+    --bug-red: 0 85% 50%;
+    --deadline-orange: 25 95% 55%;
+
+    --font-mono: 'Fira Code', monospace;
+    --font-display: 'Space Grotesk', sans-serif;
+
+    --sidebar-background: 220 20% 6%;
+    --sidebar-foreground: 0 0% 92%;
+    --sidebar-primary: 120 100% 50%;
+    --sidebar-primary-foreground: 220 20% 4%;
+    --sidebar-accent: 220 15% 12%;
+    --sidebar-accent-foreground: 0 0% 92%;
+    --sidebar-border: 220 15% 15%;
+    --sidebar-ring: 120 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-display);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+    color: hsl(var(--foreground));
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.3);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.6);
+  }
+}
+
+@layer components {
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .neon-text {
+    color: hsl(var(--primary));
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.5),
+                 0 0 40px hsl(var(--primary) / 0.2);
+  }
+
+  .neon-border {
+    border-color: hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.1),
+                inset 0 0 15px hsl(var(--primary) / 0.05);
+  }
+
+  .terminal-window {
+    @apply rounded-lg overflow-hidden;
+    background: hsl(var(--terminal-bg));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 20px 60px hsl(var(--background) / 0.8);
+  }
+
+  .terminal-header {
+    @apply flex items-center gap-2 px-4 py-3;
+    background: hsl(var(--code-line));
+  }
+
+  .terminal-dot {
+    @apply w-3 h-3 rounded-full;
+  }
+
+  .glass-card {
+    background: hsl(var(--card) / 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  .section-padding {
+    @apply px-6 md:px-12 lg:px-24 py-20 md:py-32;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+  }
+
+  .code-block {
+    @apply font-mono text-sm md:text-base p-6 rounded-lg;
+    background: hsl(var(--code-line));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .floating {
+    animation: floating 6s ease-in-out infinite;
+  }
+
+  .typing-cursor::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+    color: hsl(var(--primary));
+  }
+
+  .scanline {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scanline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: hsl(var(--primary) / 0.1);
+    animation: scanline 8s linear infinite;
+  }
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes scanline {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+}
+
+@keyframes matrix-rain {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
