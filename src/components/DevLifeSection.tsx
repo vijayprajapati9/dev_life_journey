@@ -25,6 +25,7 @@ const truths = [
 const DevLifeSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const [currentTruth, setCurrentTruth] = useState(0);
   const [animatedStats, setAnimatedStats] = useState(stats.map(() => 0));
 
@@ -76,6 +77,17 @@ const DevLifeSection = () => {
     gsap.to(imageRef.current, {
       y: -150, scale: 1.1,
       scrollTrigger: { trigger: sectionRef.current, start: "top bottom", end: "bottom top", scrub: 1.5 },
+    });
+
+    gsap.to(overlayRef.current, {
+      opacity: 1,
+      ease: "none",
+      scrollTrigger: { 
+        trigger: ".final-message", 
+        start: "bottom 80%", 
+        end: "bottom top", 
+        scrub: true 
+      },
     });
   }, { scope: sectionRef });
 
@@ -153,16 +165,17 @@ const DevLifeSection = () => {
           </div>
         </div>
 
-        <div className="final-message text-center max-w-2xl mx-auto">
+        <div className="final-message text-center max-w-2xl mx-auto relative z-20 pb-20">
           <h3 className="font-display text-3xl md:text-5xl font-bold mb-6">
-            Keep <span className="neon-text">Coding</span>,<br />
-            Keep <span className="text-accent">Creating</span>.
+            Keep <span className="neon-text text-glow-hover">Coding</span>,<br />
+            Keep <span className="text-accent text-glow-hover">Creating</span>.
           </h3>
-          <p className="text-muted-foreground text-base md:text-lg mb-8 leading-relaxed">
-            Every line of code is a small act of creation.
-            Every bug fixed is a lesson learned. Every cup of coffee is... well, necessary.
-            This is your story. And it's far from over.
-          </p>
+          <div className="text-muted-foreground text-base md:text-lg mb-8 leading-relaxed font-medium">
+            <p className="mb-2">This is not just coding.</p>
+            <p className="mb-2">This is survival.</p>
+            <p className="mb-2">This is obsession.</p>
+            <p className="text-primary mt-4 text-xl sm:text-2xl neon-text">This is a developer's life.</p>
+          </div>
 
           <div className="terminal-window max-w-sm mx-auto p-6">
             <p className="font-mono text-sm text-muted-foreground">
@@ -185,6 +198,9 @@ const DevLifeSection = () => {
           </p>
         </div>
       </div>
+      
+      {/* Fade to black overlay */}
+      <div ref={overlayRef} className="fixed inset-0 bg-black z-[100] pointer-events-none opacity-0" />
     </section>
   );
 };

@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from "react";
+import { useRef, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -21,8 +21,6 @@ const ImposterSyndromeSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const scrollRef = useGsapScroll();
-
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // Memoize random positions so they don't recalculate on every hover state re-render
   const bubblePositions = useMemo(() => {
@@ -79,8 +77,8 @@ const ImposterSyndromeSection = () => {
           <span className="text-secondary">03</span> // chapter three — the doubt
         </div>
         <h2 className="font-display text-4xl md:text-5xl lg:text-7xl font-bold mb-4 gsap-fade-up">
-          Imputer <span className="text-muted-foreground/50 line-through">Syndrome</span> <br/>
-          <span className="text-secondary">Imposter</span> Syndrome
+          <span className="text-muted-foreground/50 line-through">Imposter Syndrome</span> <br/>
+          <span className="text-secondary text-glow-hover">Imposter</span> Syndrome
         </h2>
 
         <div className="max-w-2xl mb-12 gsap-fade-up">
@@ -101,18 +99,15 @@ const ImposterSyndromeSection = () => {
             return (
               <div
                 key={index}
-                className={`thought-bubble absolute p-4 rounded-xl glass-card transition-all duration-500 cursor-pointer text-sm font-mono gsap-fade-up ${
-                  hoveredIndex === index ? 'opacity-0 scale-150 blur-sm' : 'opacity-80'
-                }`}
+                className="thought-bubble absolute gsap-fade-up z-10 cursor-pointer"
                 style={{
                   left: `${Math.min(left, 80)}%`,
                   top: `${top}%`,
-                  zIndex: hoveredIndex === index ? 0 : 10,
                 }}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
               >
-                "{thought}"
+                <div className="p-4 rounded-xl glass-card text-sm font-mono opacity-80 transition-all duration-500 hover:opacity-0 hover:blur-sm hover:scale-125">
+                  "{thought}"
+                </div>
               </div>
             );
           })}

@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useSoundEffect } from "@/hooks/useSoundEffect";
 import chapterImg from "@/assets/chapter1-first-code.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -20,10 +21,10 @@ const codeLines = [
 ];
 
 const milestones = [
-  { emoji: "📝", title: "The Sacred First File", desc: "index.html — trembling hands, limitless dreams" },
-  { emoji: "🎨", title: "CSS Discovery", desc: "Everything turned red. On purpose? Maybe." },
-  { emoji: "💥", title: "JavaScript Awakening", desc: "alert('I am a hacker now') — true power" },
-  { emoji: "🤯", title: "The React Rabbit Hole", desc: "Virtual DOM? State? Props? Help." },
+  { emoji: "📝", title: "The Sacred First File", desc: "index.html — trembling hands, limitless dreams", hoverDesc: "// Warning: Addiction starts here." },
+  { emoji: "🎨", title: "CSS Discovery", desc: "Everything turned red. On purpose? Maybe.", hoverDesc: "// Wait, how do I center a div?" },
+  { emoji: "💥", title: "JavaScript Awakening", desc: "alert('I am a hacker now') — true power", hoverDesc: "// console.log([object Object])" },
+  { emoji: "🤯", title: "The React Rabbit Hole", desc: "Virtual DOM? State? Props? Help.", hoverDesc: "// useEffect dependency array is missing..." },
 ];
 
 const HelloWorldSection = () => {
@@ -33,6 +34,16 @@ const HelloWorldSection = () => {
   const storyRef = useRef<HTMLDivElement>(null);
   const [visibleLines, setVisibleLines] = useState(0);
   const [hoveredMilestone, setHoveredMilestone] = useState<number | null>(null);
+  const [titleRevealed, setTitleRevealed] = useState(false);
+  const { playSound } = useSoundEffect();
+
+  const handleTitleClick = () => {
+    if (!titleRevealed) {
+      setTitleRevealed(true);
+      playSound("success");
+      gsap.fromTo(".secret-title", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2)" });
+    }
+  };
 
   useGSAP(() => {
     ScrollTrigger.create({
@@ -42,6 +53,7 @@ const HelloWorldSection = () => {
         const interval = setInterval(() => {
           setVisibleLines((prev) => {
             if (prev >= codeLines.length) { clearInterval(interval); return prev; }
+            playSound("typing");
             return prev + 1;
           });
         }, 200);
@@ -87,8 +99,15 @@ const HelloWorldSection = () => {
         <div className="mb-4 font-mono text-sm text-muted-foreground">
           <span className="text-primary">01</span> // chapter one — the beginning
         </div>
-        <h2 className="font-display text-4xl md:text-5xl lg:text-7xl font-bold mb-4">
-          <span className="neon-text">Hello</span>, World!
+        <h2 
+          className="font-display text-4xl md:text-5xl lg:text-7xl font-bold mb-4 cursor-pointer select-none"
+          onClick={handleTitleClick}
+        >
+          {titleRevealed ? (
+            <span className="text-secondary secret-title inline-block">Goodbye, Sleep!</span>
+          ) : (
+            <span className="neon-text hover:text-white transition-colors text-glow-hover" title="Click to reveal hidden message">Hello, World!</span>
+          )}
         </h2>
 
         {/* Story narrative */}
@@ -152,8 +171,14 @@ const HelloWorldSection = () => {
                 <div className="flex items-start gap-4">
                   <span className="text-2xl">{m.emoji}</span>
                   <div>
-                    <h3 className="font-display font-semibold text-foreground">{m.title}</h3>
-                    <p className="text-muted-foreground text-sm font-mono">{m.desc}</p>
+                    <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors">{m.title}</h3>
+                    <p className="text-muted-foreground text-sm font-mono transition-opacity duration-300">
+                      {hoveredMilestone === i ? (
+                        <span className="text-primary">{m.hoverDesc}</span>
+                      ) : (
+                        m.desc
+                      )}
+                    </p>
                   </div>
                 </div>
               </div>

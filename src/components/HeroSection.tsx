@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useSoundEffect } from "@/hooks/useSoundEffect";
 import heroEpic from "@/assets/hero-epic.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -42,13 +43,34 @@ const HeroSection = () => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const storyRef = useRef<HTMLDivElement>(null);
+  const { playSound } = useSoundEffect();
+
+  const [typedText, setTypedText] = useState("");
+  const fullText = "Developer";
+
+  useEffect(() => {
+    // Start typing after the Title reveals (delay 0.5s + duration ~0.5s)
+    const timeout = setTimeout(() => {
+      let i = 0;
+      const interval = setInterval(() => {
+        setTypedText(fullText.slice(0, i + 1));
+        playSound('typing');
+        i++;
+        if (i >= fullText.length) clearInterval(interval);
+      }, 150);
+      return () => clearInterval(interval);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [playSound]);
 
   useGSAP(() => {
-    gsap.from(titleRef.current, { y: 100, opacity: 0, duration: 1.2, ease: "power4.out" });
-    gsap.from(subtitleRef.current, { y: 60, opacity: 0, duration: 1, delay: 0.4, ease: "power3.out" });
-    gsap.from(storyRef.current, { y: 40, opacity: 0, duration: 1, delay: 0.6, ease: "power3.out" });
-    gsap.from(terminalRef.current, { y: 80, opacity: 0, scale: 0.9, duration: 1, delay: 0.8, ease: "power3.out" });
-    gsap.from(imageRef.current, { scale: 1.2, opacity: 0, duration: 2, ease: "power2.out" });
+    gsap.fromTo(sectionRef.current, { backgroundColor: "#000" }, { backgroundColor: "transparent", duration: 2, ease: "power2.inOut" });
+
+    gsap.from(titleRef.current, { y: 100, opacity: 0, duration: 1.2, delay: 0.5, ease: "power4.out" });
+    gsap.from(subtitleRef.current, { y: 60, opacity: 0, duration: 1, delay: 1.5, ease: "power3.out" });
+    gsap.from(storyRef.current, { y: 40, opacity: 0, duration: 1, delay: 2.5, ease: "power3.out" });
+    gsap.from(terminalRef.current, { y: 80, opacity: 0, scale: 0.9, duration: 1, delay: 3.5, ease: "power3.out" });
+    gsap.from(imageRef.current, { scale: 1.2, opacity: 0, duration: 3, ease: "power2.out" });
 
     // Unified parallax scroll for all text so they don't crash into each other
     gsap.to(contentRef.current, {
@@ -92,7 +114,7 @@ const HeroSection = () => {
           className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-bold mb-6 leading-[1.1] md:leading-[0.9]"
         >
           The Life of a{" "}
-          <span className="neon-text block sm:inline drop-shadow-md">Developer</span>
+          <span className="neon-text block sm:inline drop-shadow-md text-glow-hover typing-cursor">{typedText}</span>
         </h1>
         <p
           ref={subtitleRef}
@@ -136,7 +158,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-
     </section>
   );
 };

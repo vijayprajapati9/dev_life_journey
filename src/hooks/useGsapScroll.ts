@@ -23,6 +23,7 @@ export const useGsapScroll = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top 80%",
+          once: true,
         },
       });
     }
@@ -37,6 +38,7 @@ export const useGsapScroll = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top 75%",
+          once: true,
         },
       });
     }
@@ -51,6 +53,7 @@ export const useGsapScroll = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top 75%",
+          once: true,
         },
       });
     }
